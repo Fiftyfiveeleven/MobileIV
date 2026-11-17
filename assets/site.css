@@ -229,7 +229,7 @@ a.tile h3{color:var(--navy)}
 .tbl td.us{color:var(--navy);font-weight:700;background:rgba(225,241,252,.45)}
 .tbl td:first-child{color:var(--navy);font-weight:600}
 .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.tscroll .tbl{min-width:560px}
+.tscroll .tbl{min-width:0}
 
 /* areas */
 .areas{display:flex;flex-wrap:wrap;gap:10px}
@@ -340,3 +340,7 @@ footer{background:var(--navy);color:#9fb8d6;padding:72px 0 0;margin-top:0}
 .nl .btn:hover{background:var(--oceanD)}
 .phero-g{align-items:center}
 @media (max-width:520px){.stats{gap:18px}.stats span{font-size:12.5px;line-height:1.3;display:block}.badge{font-size:13px}}
+.g2.wide{grid-template-columns:.8fr 1.2fr}
+@media (max-width:960px){.g2.wide{grid-template-columns:1fr}}
+@media (max-width:600px){.tbl{font-size:14px}.tbl th,.tbl td{padding:12px 10px}.tbl thead th{font-size:12.5px}}
+@media (max-width:600px){.tbl.c4 th:nth-child(4),.tbl.c4 td:nth-child(4){display:none}}

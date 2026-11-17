@@ -534,7 +534,7 @@ def build_home():
  </div>
 </div></section>
 
-<section class="sec"><div class="w g2">
+<section class="sec"><div class="w g2 wide">
  <div><span class="kick">Why at home</span><h2>Skip the waiting room.</h2><p class="sub">Feeling awful is hard enough. Here's what changes when the IV comes to you.</p><a class="tlink" href="/group-iv-therapy/">Treating a group or event?</a></div>
  <div class="tscroll"><table class="tbl"><thead><tr><th></th><th>Clinic or urgent care</th><th class="us">Optimized at home</th></tr></thead><tbody>
  <tr><td>Drive there while you're sick</td><td>Yes</td><td class="us">Nope, we come to you</td></tr>
@@ -581,7 +581,7 @@ def build_menu():
 </div></section>
 <section class="sec bg-foam"><div class="w">
  <div class="head"><span class="kick">Compare</span><h2>All drips side by side</h2></div>
- <div class="tscroll"><table class="tbl"><thead><tr><th>Drip</th><th>Price</th><th>Made for</th><th>What's in it</th></tr></thead><tbody>{rows}</tbody></table></div>
+ <div class="tscroll"><table class="tbl c4"><thead><tr><th>Drip</th><th>Price</th><th>Made for</th><th>What's in it</th></tr></thead><tbody>{rows}</tbody></table></div>
  <div class="note" style="margin-top:24px"><b>Our approach:</b> Our experienced healthcare team works with you to help you reach your best. Every drip on this menu is a starting point. We customize it to you and your situation, to optimize how you feel today so you can meet your goals and be your best self. See every ingredient in our <a href="/ingredients/">ingredient guide</a>.</div>
 </div></section>
 {cta("Not sure which drip?","Text us how you're feeling. Your nurse will help you pick, and confirm it at your visit.")}'''
