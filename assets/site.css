@@ -344,3 +344,13 @@ footer{background:var(--navy);color:#9fb8d6;padding:72px 0 0;margin-top:0}
 @media (max-width:960px){.g2.wide{grid-template-columns:1fr}}
 @media (max-width:600px){.tbl{font-size:14px}.tbl th,.tbl td{padding:12px 10px}.tbl thead th{font-size:12.5px}}
 @media (max-width:600px){.tbl.c4 th:nth-child(4),.tbl.c4 td:nth-child(4){display:none}}
+/* comfortable tap targets on touch screens */
+.topbar a{display:inline-flex;align-items:center;min-height:38px;padding:0 4px}
+.tlink{min-height:44px}
+@media (max-width:760px){.topbar a{min-height:44px}.areas a{min-height:44px}}
+/* mobile menu: anchor under the sticky nav (backdrop-filter traps fixed children) */
+@media (max-width:1080px){
+  .nl,.nl.o{position:absolute;inset:auto;top:100%;left:0;right:0;height:calc(100vh - 76px);height:calc(100dvh - 76px);border-top:1px solid var(--line)}
+}
+@media (max-width:1080px){.nl .btn{justify-content:center;gap:10px;border-radius:999px;border-bottom:0;width:100%}}
+body:has(.nl.o) .mbar{display:none}
