@@ -6,7 +6,7 @@ Writes every page into the site root (one folder per URL, each with index.html),
 plus sitemap.xml, robots.txt and llms.txt.
 Edit the content dictionaries below and re-run to update the whole site.
 """
-import json, os, html
+import json, os, html, hashlib
 from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,6 +21,10 @@ EMAIL = "optiperfwell@gmail.com"
 IG = "https://instagram.com/OptimizedPerformanceWellness"
 
 e = html.escape
+
+def ver(rel):
+    """Content hash for cache-busting: the URL changes whenever the file changes."""
+    return hashlib.sha1(open(os.path.join(ROOT, rel), "rb").read()).hexdigest()[:10]
 
 def sms(body=None, num=PHONE1_T):
     return f"sms:{num}" + (f"?&body={quote(body)}" if body else "")
@@ -429,7 +433,7 @@ def page(path, title, desc, body, ld=None, cr=None, cur=None, og_type="website",
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/site.css?v={ver("assets/site.css")}">
 <script>document.documentElement.classList.add('js')</script>
 <script type="application/ld+json">{json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False)}</script>
 </head>
@@ -439,7 +443,7 @@ def page(path, title, desc, body, ld=None, cr=None, cur=None, og_type="website",
 {body}
 </main>
 {footer()}
-<script src="/assets/site.js" defer></script>
+<script src="/assets/site.js?v={ver("assets/site.js")}" defer></script>
 </body>
 </html>
 '''
@@ -727,7 +731,9 @@ def build_areas():
 {cta()}'''
     page("service-areas/", "IV Therapy Service Areas: Jupiter to Stuart, FL",
          "Mobile IV therapy house calls in Jupiter, Tequesta, Juno Beach, Palm Beach Gardens, North Palm Beach, Hobe Sound, Stuart and West Palm Beach, FL.",
-         body, None, cr)
+         body, [{"@type": "CollectionPage", "@id": BASE + "/service-areas/#collection", "url": BASE + "/service-areas/", "name": "Mobile IV therapy service areas",
+                 "mainEntity": {"@type": "ItemList", "itemListElement": [{"@type": "ListItem", "position": i+1, "url": f'{BASE}/service-areas/{a["slug"]}/', "name": f'Mobile IV therapy in {a["city"]}, FL'} for i,a in enumerate(AREAS)]}}],
+         cr)
 
     for a in AREAS:
         cr = [("Home","/"),("Service areas","/service-areas/"),(f'{a["city"]}, FL', f'/service-areas/{a["slug"]}/')]
@@ -825,6 +831,7 @@ def build_faq():
     sections = "".join(f'<h2 class="faqcat" id="{c.split()[0].lower().strip("+")}">{e(c)}</h2>{faq_html(qs)}' for c,qs in FAQ)
     body = phero(cr, "Mobile IV therapy FAQ", f"Good questions, straight answers. Still wondering? Text or call {PHONE1} and a real person will get back to you.") + f'''
 <section class="sec"><div class="w wn">
+ {answer(f"Mobile IV therapy from {e(NAME)} means a licensed nurse comes to your home, office or hotel in Jupiter, Palm Beach County or the Treasure Coast. Drips cost $150 to $435, take 45 to 60 minutes, and start with a health screening. We treat ages 10 and older. Book by texting {PHONE1}.", "The short version")}
  {sections}
  <div class="warn" style="margin-top:36px">{ic("alert",24).replace('<svg','<svg class="ic"')}<div><b>When to call a doctor instead:</b> IV hydration isn't emergency care. For trouble breathing, chest pain, confusion, a fever that won't come down, or severe dehydration in a child, call your doctor or 911.</div></div>
 </div></section>
@@ -860,12 +867,14 @@ def build_guides():
     cr = [("Home","/"),("Guides","/guides/")]
     cards = "".join(f'<a class="acard rv" href="/guides/{g["slug"]}/"><div class="art"></div><div class="ab"><span class="tg">Guide</span><h2 style="font-size:21px;margin:8px 0">{e(g["title"])}</h2><p>{e(g["short"])}</p></div></a>' for g in GUIDES)
     body = phero(cr, "IV therapy guides", "Plain-language answers to the questions we hear most, from our nursing team.") + f'''
-<section class="sec"><div class="w"><div class="g2" style="gap:22px">{cards}</div>
+<section class="sec"><div class="w">{answer("Our guides answer the most common mobile IV therapy questions: what it costs in Palm Beach County ($150 to $435 per drip), what happens at an at-home visit, when IV fluids help if you're sick, and how IV hydration compares with drinking water.", "What's here")}<div class="g2" style="gap:22px">{cards}</div>
 <p style="margin-top:28px"><a class="tlink" href="/ingredients/">IV ingredient guide</a> &nbsp;·&nbsp; <a class="tlink" href="/faq/">FAQ</a></p></div></section>
 {cta()}'''
     page("guides/", "IV Therapy Guides",
          "Guides to mobile IV therapy: cost in Palm Beach County, what to expect at an at-home visit, IV fluids when you're sick, and IV hydration vs. drinking water.",
-         body, None, cr, cur="guides/")
+         body, [{"@type": "CollectionPage", "@id": BASE + "/guides/#collection", "url": BASE + "/guides/", "name": "IV therapy guides",
+                 "mainEntity": {"@type": "ItemList", "itemListElement": [{"@type": "ListItem", "position": i+1, "url": f'{BASE}/guides/{g["slug"]}/', "name": g["title"]} for i,g in enumerate(GUIDES)]}}],
+         cr, cur="guides/")
     rows = "".join(f'<tr><td><a href="/iv-menu/{d["slug"]}/">{e(d["name"])}</a></td><td>${d["price"]}</td><td>{e(d["tag"])}</td></tr>' for d in sorted(DRIPS, key=lambda x: x["price"]))
     for g in GUIDES:
         url = f'/guides/{g["slug"]}/'
