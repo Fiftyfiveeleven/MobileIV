@@ -3,7 +3,7 @@
 
 Run:  python3 _build/build.py
 Writes every page into the site root (one folder per URL, each with index.html),
-plus sitemap.xml, robots.txt, llms.txt and netlify.toml.
+plus sitemap.xml, robots.txt and llms.txt.
 Edit the content dictionaries below and re-run to update the whole site.
 """
 import json, os, html
@@ -926,25 +926,6 @@ def build_extras():
 
 ## Guides
 {guides}
-""")
-    open(os.path.join(ROOT, "netlify.toml"), "w").write("""[build]
-  publish = "."
-
-[[redirects]]
-  from = "/_build/*"
-  to = "/404.html"
-  status = 404
-
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=604800"
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
 """)
 
 if __name__ == "__main__":
